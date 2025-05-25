@@ -1,0 +1,66 @@
+mapping:
+  - target: LRF
+    type: datatype
+    keep:
+      - Inputs
+    bypass:
+      - Weights
+      - Outputs
+    stream:
+      []
+  - target: RF
+    type: datatype
+    keep:
+      - Outputs
+    bypass:
+      - Weights
+      - Inputs
+    stream:
+      []
+  - target: SMEM
+    type: datatype
+    keep:
+      - Weights
+      - Inputs
+    bypass:
+      - Outputs
+    stream:
+      []
+  - target: DRAM
+    type: datatype
+    keep:
+      - Weights
+      - Inputs
+      - Outputs
+    bypass:
+      []
+    stream:
+      - Weights
+      - Inputs
+      - Outputs
+  - target: LRF
+    type: temporal
+    factors: C3 M1 R1 S3 N1 P1 Q1
+    permutation: CSMRNPQ
+  - target: RF
+    type: spatial
+    factors: C1 M16 R1 S1 N1 P4 Q1
+    permutation: MPCRSNQ
+    split: 2
+  - target: RF
+    type: temporal
+    factors: C1 M1 R1 S1 N1 P1 Q28
+    permutation: QCMRSNP
+  - target: SMEM
+    type: spatial
+    factors: C1 M1 R1 S1 N1 P2 Q2
+    permutation: PQCMRSN
+    split: 2
+  - target: SMEM
+    type: temporal
+    factors: C1 M2 R3 S1 N1 P14 Q1
+    permutation: RPMCSNQ
+  - target: DRAM
+    type: temporal
+    factors: C1 M1 R1 S1 N1 P1 Q2
+    permutation: QCMRSNP

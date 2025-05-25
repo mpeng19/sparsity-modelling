@@ -1,0 +1,42 @@
+architecture_constraints:
+  targets:
+
+  #
+  # DRAM
+  #
+  - target: DRAM
+    type: temporal
+    factors: C=1 R=1 S=1      # avoid temporal reduction along C, R, S
+  
+  #
+  # RF
+  #
+  
+  # RF share the same M, N factor as LRF as LRF only store A not Z
+  - target: RF
+    type: temporal
+    factors: M=1 N=1 
+    permutation: NM # Keep only relevant dims
+
+  # RF is an accumulator
+  - target: RF
+    type: bypass
+    keep: [ Outputs ] # Assuming Z=Outputs
+    bypass: [ Inputs, Weights ] # Assuming A=Inputs, B=Weights
+
+  # spatial K upper limited by a density of 0.25
+  - target: RF
+    type: spatial
+    # K<=64 -> Use C, R, S. Let mapper find factors whose product is <= 64.
+    factors: M=16 N=1 C R S 
+    permutation: M N C R S # Example permutation using CNN dims
+    # split: 1 # Removed split directive as spatial mapping is handled by fanout to LRF
+ 
+  # #
+  # # LRF
+  # #
+  
+  - target: LRF
+    type: bypass
+    keep: [ Inputs ] # Assuming A=Inputs
+    bypass: [ Weights, Outputs ] # Assuming B=Weights, Z=Outputs
