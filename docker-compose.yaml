@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  micro-ae22:
+    hostname: micro22-ae
+    image: mitdlh/timeloop-accelergy-pytorch:micro22-artifact
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./workspace:/home/workspace
+    environment:
+      - USER_UID=1000
+      - USER_GID=1000
+      # - JUPYTER_SWITCHES=--NotebookApp.token=''
+      # - JUPYTER_SWITCHES=--allow-root
